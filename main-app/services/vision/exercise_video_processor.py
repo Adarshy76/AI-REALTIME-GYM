@@ -22,7 +22,7 @@ class VideoProcessorClass(VideoProcessorBase):
         self._exercise_type = "Squats"
 
         _app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        model_path = os.path.join(_app_root, "ml_models", "pose_landmarker_full.task")
+        model_path = os.path.join(_app_root, "ml_models", "pose_landmarker_lite.task")
         base_option = python.BaseOptions(model_asset_path=model_path)
 
         options = vision.PoseLandmarkerOptions(
