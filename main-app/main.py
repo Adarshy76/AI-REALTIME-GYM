@@ -15,6 +15,19 @@ from groq import Groq
 from services.coaching.llm import LLMCoach
 from services.coaching.tts import TextToSpeech
 from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
+import requests
+
+def get_ice_servers():
+    """Fetch TURN credentials from Metered.ca."""
+    try:
+        response = requests.get(
+            "https://ai-realtime-gym-ay.metered.live/api/v1/turn/credentials",
+            params={"apiKey": "9bf4b17130407fa47acfa18354f809f21815"},
+            timeout=5,
+        )
+        return response.json()
+    except Exception:
+        return [{"urls": ["stun:stun.l.google.com:19302"]}]
 
   
 def main():
@@ -202,16 +215,7 @@ def main():
             key="exercise-analysis",
             mode=WebRtcMode.SENDRECV,
             video_processor_factory=VideoProcessorClass,
-            rtc_configuration={
-                "iceServers": [
-                    {"urls": ["stun:stun.l.google.com:19302"]},
-                    {
-                        "urls": ["turn:openrelay.metered.ca:80"],
-                        "username": "openrelayproject",
-                        "credential": "openrelayproject",
-                    },
-                ]
-            },
+           rtc_configuration={"iceServers": get_ice_servers()},
             media_stream_constraints={
                 "video": True,
                 "audio": False
